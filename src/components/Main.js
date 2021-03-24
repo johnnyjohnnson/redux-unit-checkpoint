@@ -4,8 +4,25 @@ import Post from './Post'
 import FilterPosts from './FilterPosts'
 import { Container, Row, Col, Button } from 'reactstrap'
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchPosts } from '../actions/posts';
+import { fetchComments } from '../actions/comments';
+import { toggleAddPostFormVisibility } from '../actions/visibility';
+
+
 class Main extends Component {
+
+  componentDidMount() {
+    this.props.fetchPosts();
+    this.props.fetchComments();
+  }
+
   render() {
+
+    const copyOfPosts = this.props.posts.map(post => {return {...post, comments: this.props.comments.filter(comment => comment.post_id === post.id)}});
+    const sortedPosts = copyOfPosts.sort(function(a, b) {return b.votes - a.votes});
+
     return (
       <Container className="mt-4">
         <Row>
@@ -13,18 +30,17 @@ class Main extends Component {
             <FilterPosts />
           </Col>
           <Col sm="2">
-            <Button color="secondary">Add Post</Button>
+            <Button color="secondary" onClick={this.props.toggleAddPostFormVisibility}>Add Post</Button>
           </Col>
         </Row>
         <Row className="mt-4">
           <Col sm={{size: 11, offset: 1}}>
-            <AddPostForm />
+            {this.props.AddPostFormVisibility && <AddPostForm />}
           </Col>
         </Row>
         <Row>
           <Col className="pr-0" sm={{size: 9, offset: 1}}>
-            {/* Below is the Post component for each post. It is up to you how you would like to iterate over them. */}
-            <Post />
+            {sortedPosts.map( (post, i) => {return <Post key={i} post={post}/>})}
           </Col>
         </Row>
       </Container>
@@ -32,4 +48,26 @@ class Main extends Component {
   }
 }
 
-export default Main
+// 1) it makes certain parts of the state available to the component via props
+// 2) it re-renders the component whenever these parts of the state change
+const mapStateToProps = state => {
+  const {postsReducer, commentsReducer, visibilityReducer} = state;
+  return {
+    posts: postsReducer.posts,
+    comments: commentsReducer.comments,
+    AddPostFormVisibility: visibilityReducer.AddPostFormEnabled
+  }
+};
+
+// actionCreator kommen hier rein
+// "passes Action-Creators to a Component"
+// "-> makes Action-Creators available to Component via props"
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchPosts, fetchComments, toggleAddPostFormVisibility
+}, dispatch)
+
+// "connect is a higher order Component"
+// "-> wraps your Component in a redux-aware Component"
+// "it wraps your component with another component that knows about the store"
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
+

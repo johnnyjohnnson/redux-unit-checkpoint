@@ -4,6 +4,7 @@ import './App.css';
 import Nav from './components/Nav';
 import Main from './components/Main';
 
+
 export class App extends Component {
 
   render() {
@@ -15,5 +16,6 @@ export class App extends Component {
     );
   }
 }
+
 
 export default App;
