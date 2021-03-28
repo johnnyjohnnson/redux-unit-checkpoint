@@ -10,21 +10,19 @@ class AddPostForm extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { isValid: false, post: { title: "", body: "", author: "", image: "" } };
+    this.state = { post: { title: "", body: "", author: "", image: "" } };
   }
 
-  checkValidity() {
-    this.setState({ isValid:
-      this.state.post.title.length > 0 && this.state.post.body.length > 0 && this.state.post.author.length > 0 && this.state.post.image.length > 0 });
+  isAddFormValid = () => {
+    return this.state.post.title.length > 0 && this.state.post.body.length > 0 && this.state.post.author.length > 0 && this.state.post.image.length > 0;
   }
 
   formInputHandler = (e) => {
     this.setState({ post: {...this.state.post, [e.target.name]: e.target.value }});
-    this.checkValidity();
   }
 
   clearFormFields = () => {
-    this.setState({ isValid: false, post: {...this.state.post, title: "", body: "", author: "", image: "" }});
+    this.setState({ post: {...this.state.post, title: "", body: "", author: "", image: "" }});
   }
 
   submitAction = (e) => {
@@ -54,7 +52,7 @@ class AddPostForm extends Component {
               <Label for="image-field">Image URL</Label>
               <Input type="text" name="image" id="image-field" value={this.state.post.image} onChange={(e) => this.formInputHandler(e)} />
             </FormGroup>
-            <Button type="submit" disabled={!this.state.isValid}>Submit</Button>
+              <Button type="submit" disabled={!this.isAddFormValid()}>Submit</Button>
           </Form>
         </Col>
       </Row>
