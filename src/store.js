@@ -5,14 +5,13 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import postsReducer from './reducers/posts';
 import commentsReducer from './reducers/comments';
-import visibilityReducer from './reducers/visibility';
 // import logger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 
 const rootReducer = combineReducers({
-  postsReducer, commentsReducer, visibilityReducer
+  postsReducer, commentsReducer
 })
 
 const initialState = {}

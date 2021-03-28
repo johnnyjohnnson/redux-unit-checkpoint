@@ -19,11 +19,19 @@ import FaArrowDown from 'react-icons/lib/fa/arrow-down'
 import FaComment from 'react-icons/lib/fa/comment'
 import { votePost } from '../actions/posts'
 import { submitComment } from '../actions/comments'
-import { toggleCommentVisibility } from '../actions/visibility'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 class Post extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {commentVisibility: true}
+  }
+
+  toggleCommentVisibility = () => {
+    this.setState({commentVisibility: !this.state.commentVisibility})
+  }
 
   render() {
 
@@ -49,14 +57,14 @@ class Post extends React.Component {
                 {this.props.post.content}
               </CardText>
                 <hr />
-                a few seconds ago | <FaComment/> {countComments + correctlyPluralized} <Label onClick={this.props.toggleCommentVisibility}> | {this.props.CommentVisibility ? "hide" : "show"} CommentSection </Label>
+                a few seconds ago | <FaComment/> {countComments + correctlyPluralized} <Label onClick={this.toggleCommentVisibility}> | {this.state.commentVisibility ? "hide" : "show"} CommentSection </Label>
                 <Form inline>
                   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                     <Input type="text" name="comment" id="comment-field" placeholder="Enter a comment here" />
                   </FormGroup>
                   <Button onClick={() => this.props.submitComment(document.getElementById("comment-field").value, this.props.post.id)}>Submit</Button>
                 </Form>
-                {this.props.CommentVisibility && <ul className="mt-2">
+                {this.state.commentVisibility && <ul className="mt-2">
                   {this.props.post.comments.map(
                     (comment, i) => {
                       return <li key={i}>{comment.content}</li>
@@ -69,23 +77,17 @@ class Post extends React.Component {
       </Row>
     )
   }
-  
 }
 
-// 1) it makes certain parts of the state available to the component via props
-// 2) it re-renders the component whenever these parts of the state change
-const mapStateToProps = state => {
-  return {CommentVisibility: state.visibilityReducer.CommentSectionEnabled}
-}
 
 // actionCreator kommen hier rein
 // "passes Action-Creators to a Component"
 // "-> makes Action-Creators available to Component via props"
 const mapDispatchToProps = dispatch => bindActionCreators({
-  votePost, submitComment, toggleCommentVisibility
+  votePost, submitComment
 }, dispatch);
 
 // "connect is a higher order Component"
 // "-> wraps your Component in a redux-aware Component"
 // "it wraps your component with another component that knows about the store"
-export default connect(mapStateToProps, mapDispatchToProps)(Post);
+export default connect(null, mapDispatchToProps)(Post);

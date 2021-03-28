@@ -59,7 +59,7 @@ class Main extends Component {
 // 1) it makes certain parts of the state available to the component via props
 // 2) it re-renders the component whenever these parts of the state change
 const mapStateToProps = state => {
-  const {postsReducer, commentsReducer, visibilityReducer} = state;
+  const {postsReducer, commentsReducer} = state;
   return {
     posts: postsReducer.posts,
     comments: commentsReducer.comments
