@@ -8,10 +8,18 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchPosts } from '../actions/posts';
 import { fetchComments } from '../actions/comments';
-import { toggleAddPostFormVisibility } from '../actions/visibility';
 
 
 class Main extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { AddPostFormVisibility: true }
+  }
+
+  toggleAddPostFormVisibility = () => {
+    this.setState({AddPostFormVisibility: !this.state.AddPostFormVisibility});
+  }
 
   componentDidMount() {
     this.props.fetchPosts();
@@ -30,12 +38,12 @@ class Main extends Component {
             <FilterPosts />
           </Col>
           <Col sm="2">
-            <Button color="secondary" onClick={this.props.toggleAddPostFormVisibility}>Add Post</Button>
+            <Button color="secondary" onClick={this.toggleAddPostFormVisibility}>Add Post</Button>
           </Col>
         </Row>
         <Row className="mt-4">
           <Col sm={{size: 11, offset: 1}}>
-            {this.props.AddPostFormVisibility && <AddPostForm />}
+            {this.state.AddPostFormVisibility && <AddPostForm />}
           </Col>
         </Row>
         <Row>
@@ -54,8 +62,7 @@ const mapStateToProps = state => {
   const {postsReducer, commentsReducer, visibilityReducer} = state;
   return {
     posts: postsReducer.posts,
-    comments: commentsReducer.comments,
-    AddPostFormVisibility: visibilityReducer.AddPostFormEnabled
+    comments: commentsReducer.comments
   }
 };
 
@@ -63,7 +70,7 @@ const mapStateToProps = state => {
 // "passes Action-Creators to a Component"
 // "-> makes Action-Creators available to Component via props"
 const mapDispatchToProps = dispatch => bindActionCreators({
-  fetchPosts, fetchComments, toggleAddPostFormVisibility
+  fetchPosts, fetchComments
 }, dispatch)
 
 // "connect is a higher order Component"
