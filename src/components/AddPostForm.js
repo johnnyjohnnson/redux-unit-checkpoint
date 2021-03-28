@@ -19,16 +19,12 @@ class AddPostForm extends Component {
   }
 
   formInputHandler = (e) => {
-    this.setState({ post: Object.assign({}, this.state.post, {[e.target.name]: e.target.value }) });
+    this.setState({ post: {...this.state.post, [e.target.name]: e.target.value }});
     this.checkValidity();
   }
 
   clearFormFields = () => {
-    document.getElementById("title-field").value = "";
-    document.getElementById("body-field").value = "";
-    document.getElementById("author-field").value = "";
-    document.getElementById("image-field").value = "";
-    this.setState({ isValid: false, post: Object.assign({}, this.state.post, {title: "", body: "", author: "", image: "" }) });
+    this.setState({ isValid: false, post: {...this.state.post, title: "", body: "", author: "", image: "" }});
   }
 
   submitAction = (e) => {
@@ -41,22 +37,22 @@ class AddPostForm extends Component {
     return (
       <Row>
         <Col sm="10">
-          <Form onSubmit={this.submitAction} onChange={(e) => this.formInputHandler(e)} >
+          <Form onSubmit={this.submitAction} >
             <FormGroup>
               <Label for="title-field">Title</Label>
-              <Input type="text" name="title" id="title-field" />
+              <Input type="text" name="title" id="title-field" value={this.state.post.title} onChange={(e) => this.formInputHandler(e)} />
             </FormGroup>
             <FormGroup>
               <Label for="body-field">Body</Label>
-              <Input type="text" name="body" id="body-field" />
+              <Input type="text" name="body" id="body-field" value={this.state.post.body} onChange={(e) => this.formInputHandler(e)} />
             </FormGroup>
             <FormGroup>
               <Label for="author-field">Author</Label>
-              <Input type="text" name="author" id="author-field" />
+              <Input type="text" name="author" id="author-field" value={this.state.post.author} onChange={(e) => this.formInputHandler(e)} />
             </FormGroup>
             <FormGroup>
               <Label for="image-field">Image URL</Label>
-              <Input type="text" name="image" id="image-field" />
+              <Input type="text" name="image" id="image-field" value={this.state.post.image} onChange={(e) => this.formInputHandler(e)} />
             </FormGroup>
             <Button type="submit" disabled={!this.state.isValid}>Submit</Button>
           </Form>
